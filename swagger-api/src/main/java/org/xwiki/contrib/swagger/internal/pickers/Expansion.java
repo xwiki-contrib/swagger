@@ -20,10 +20,9 @@
 package org.xwiki.contrib.swagger.internal.pickers;
 
 /**
- * Picker for the expansion parameter of thw swagger macro.
+ * Picker for the expansion parameter of the swagger macro.
  *
  * @version $Id$
- * @since 1.0
  */
 public enum Expansion
 {

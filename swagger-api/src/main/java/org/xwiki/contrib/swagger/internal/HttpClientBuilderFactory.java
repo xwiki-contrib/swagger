@@ -30,11 +30,9 @@ import javax.inject.Singleton;
  * Simple factory for creating a HttpClient to help testing.
  *
  * @version $Id$
- * @since 1.0
  */
 @Component(roles = HttpClientBuilderFactory.class)
 @Singleton
-@Unstable
 public class HttpClientBuilderFactory
 {
     /**

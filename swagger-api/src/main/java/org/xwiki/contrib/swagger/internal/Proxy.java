@@ -26,25 +26,22 @@ import java.util.Base64;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.ws.rs.core.UriBuilder;
 
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
-import org.xwiki.stability.Unstable;
 
 /**
  * Retrieves the OpenAPI specification from URL.
  *
  * @version $Id$
- * @since 1.0
  */
 @Component(roles = Proxy.class)
 @Singleton
-@Unstable
 public class Proxy
 {
     /**
@@ -120,11 +117,11 @@ public class Proxy
                 return EntityUtils.toString(response.getEntity());
             } else {
                 int statusCode = response.getStatusLine().getStatusCode();
-                logger.error("Request failed with status code: {[]}", statusCode);
+                logger.error("Request failed with status code: [{}]", statusCode);
             }
         } catch (IOException e) {
             // Log any exception that occurs during the request execution
-            logger.error("Exception occurred while executing the request: {[]}", e.getMessage(), e);
+            logger.error("Exception occurred while executing the request: [{}]", e.getMessage(), e);
         }
 
         // Failsafe: return an empty JSON object if status code is not 200
@@ -150,9 +147,9 @@ public class Proxy
         try (CloseableHttpClient client = httpClientBuilderFactory.create()) {
             if (accessToken != null && !accessToken.isEmpty()) {
                 // Gitlab uses the token in the qParams
-                UriBuilder builder = UriBuilder.fromUri(basicURL.toURI());
-                builder.queryParam("private_token", accessToken);
-                return executeRequest(client, new HttpGet(builder.build()));
+                URIBuilder uriBuilder =  new URIBuilder(basicURL.toURI());
+                uriBuilder.addParameter("private_token", accessToken);
+                return executeRequest(client, new HttpGet(uriBuilder.build()));
             }
             return executeRequest(client, new HttpGet(basicURL.toURI()));
         }

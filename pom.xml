@@ -33,7 +33,6 @@
   <version>1.0-SNAPSHOT</version>
   <properties>
     <xwiki.release.jira.skip>false</xwiki.release.jira.skip>
-    <!-- If the project is hosted on http://jira.xwiki.org, only the id needs to be provided. -->
     <xwiki.issueManagement.jira.id>XSWAG</xwiki.issueManagement.jira.id>
   </properties>
   <developers>

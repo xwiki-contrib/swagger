@@ -23,7 +23,6 @@ package org.xwiki.contrib.swagger.internal.pickers;
  * Picker for the tag sort parameter of the swagger macro.
  *
  * @version $Id$
- * @since 1.0
  */
 public enum SortTags
 {

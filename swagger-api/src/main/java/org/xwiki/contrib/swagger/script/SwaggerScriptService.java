@@ -32,7 +32,7 @@ import org.xwiki.script.service.ScriptService;
 import org.xwiki.stability.Unstable;
 
 /**
- * Simple scripting service for accessing the @org.xwiki.contrib.swagger.internal.Proxy.
+ * Simple scripting service for accessing the proxy.
  *
  * @version $Id$
  * @since 1.0
