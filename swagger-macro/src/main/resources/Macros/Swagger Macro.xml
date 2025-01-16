@@ -1579,7 +1579,7 @@ path=$services.webjars.url('org.webjars.npm:js-yaml', 'dist/js-yaml.js')</parame
       </type>
     </class>
     <property>
-      <defaultValue/>
+      <defaultValue>example</defaultValue>
     </property>
     <property>
       <description/>

@@ -36,7 +36,17 @@
   <minorEdit>false</minorEdit>
   <syntaxId>plain/1.0</syntaxId>
   <hidden>true</hidden>
-  <content>rendering.macro.swagger.description=Enables you to display OpenAPI specifications directly in your wiki.
+  <content>org.xwiki.contrib.swagger.internal.pickers.Expansion.full=Full
+org.xwiki.contrib.swagger.internal.pickers.Expansion.list=List
+org.xwiki.contrib.swagger.internal.pickers.Expansion.none=None
+org.xwiki.contrib.swagger.internal.pickers.Model.example=Example
+org.xwiki.contrib.swagger.internal.pickers.Model.model=Model
+org.xwiki.contrib.swagger.internal.pickers.SortMethod.ALPHA=Alpha
+org.xwiki.contrib.swagger.internal.pickers.SortMethod.DEFAULT=Default
+org.xwiki.contrib.swagger.internal.pickers.SortMethod.METHOD=Method
+org.xwiki.contrib.swagger.internal.pickers.SortTags.ALPHA=Alpha
+org.xwiki.contrib.swagger.internal.pickers.SortTags.DEFAULT=Default
+rendering.macro.swagger.description=Enables you to display OpenAPI specifications directly in your wiki.
 rendering.macro.swagger.name=Swagger
 rendering.macro.swagger.parameter.defaultModelRendering.description=Example JSON (example), JSON schema (model)
 rendering.macro.swagger.parameter.defaultModelRendering.name=Show model as

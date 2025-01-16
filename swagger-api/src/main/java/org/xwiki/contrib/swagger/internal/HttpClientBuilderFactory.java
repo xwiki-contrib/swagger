@@ -22,7 +22,6 @@ package org.xwiki.contrib.swagger.internal;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.xwiki.component.annotation.Component;
-import org.xwiki.stability.Unstable;
 
 import javax.inject.Singleton;
 
