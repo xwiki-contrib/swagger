@@ -827,19 +827,19 @@ path=$services.webjars.url('org.webjars.npm:js-yaml', 'dist/js-yaml.js')</parame
 ## We create a div with all the parameters provided by the user.
 {{html}}
 &lt;div class="swaggeroot"
-#foreach($parameter in $xcontext.macro.params.getParameterNames())
+#foreach($parameter in $wikimacro.parameters.getParameterNames())
   #set ($dataName =   "data-$camelToKebabMap.get($parameter)")
-  $dataName = "$xcontext.macro.params.get($parameter)"
+  $dataName = "$wikimacro.parameters.get($parameter)"
 #end
 &gt;
 ## If the proxy is enabled all the request to get the OpenAPI specifications will be made by the backend and stored in the swaggercontent.
-#if ($xcontext.macro.params.proxy == true)
+#if ($wikimacro.parameters.proxy == true)
 &lt;pre class="swaggercontent hidden"&gt;
   #set ($params = {
-    "url": $xcontext.macro.params.url,
-    "accessToken": $xcontext.macro.params.token,
-    "username": $xcontext.macro.params.userName,
-    "password": $xcontext.macro.params.password
+    "url": $wikimacro.parameters.url,
+    "accessToken": $wikimacro.parameters.token,
+    "username": $wikimacro.parameters.userName,
+    "password": $wikimacro.parameters.password
   })
   $services.swagger.executeProxy($params)
 &lt;/pre&gt;
