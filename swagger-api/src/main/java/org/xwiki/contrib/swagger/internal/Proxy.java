@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Base64;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -52,6 +53,8 @@ public class Proxy
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
 
+    private static final String ACCESS_TOKEN = "accessToken";
+
     @Inject
     private Logger logger;
 
@@ -61,28 +64,26 @@ public class Proxy
     /**
      * Makes the request to retrieve the OpenAPI specification and returns it.
      *
-     * @param url address from where to retrieve the OpenAPI specification
-     * @param accessToken authentication token for accessing the data
-     * @param username bitbucket username for accessing the resource.
-     * @param password bitbucket password for accessing the resouce
+     * @param  params map with all the parameters needed for the requests.
      * @return OpenAPI specification as a string
      * @throws IOException
      * @throws URISyntaxException
      */
-    public String request(String url, String accessToken, String username, String password)
-        throws IOException, URISyntaxException
+    public String request(Map<String, String> params) throws IOException, URISyntaxException
     {
+        String url = params.get("url");
         if (url == null || url.isEmpty()) {
             return DEFAULT_OBJECT;
         }
         // We are having 4 cases: random url, github, gitlab, bitbucket
         URL basicURL = new URL(url);
+        // We are having 4 cases: random url, github, gitlab, bitbucket;
         if (basicURL.getHost().contains("github")) {
-            return handleGithub(basicURL, accessToken);
+            return handleGithub(basicURL, params.get(ACCESS_TOKEN));
         } else if (basicURL.getHost().contains("gitlab")) {
-            return handleGitlab(basicURL, accessToken);
+            return handleGitlab(basicURL, params.get(ACCESS_TOKEN));
         } else if (basicURL.getHost().contains("bitbucket")) {
-            return handleBitbucket(basicURL, username, password);
+            return handleBitbucket(basicURL, params.get("username"), params.get("password"));
         } else {
             return handleBasicURL(basicURL);
         }

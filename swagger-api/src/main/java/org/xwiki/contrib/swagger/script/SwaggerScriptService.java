@@ -21,6 +21,7 @@ package org.xwiki.contrib.swagger.script;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -47,17 +48,14 @@ public class SwaggerScriptService implements ScriptService
     /**
      * Makes the request to retrieve the OpenAPI specification and returns it.
      *
-     * @param url address from where to retrieve the OpenAPI specification
-     * @param accessToken authentication token for accessing the data
-     * @param username bitbucket username for accessing the resource.
-     * @param password bitbucket password for accessing the resouce
+     * @param  params map with all the parameters needed for the requests.
      * @return OpenAPI specification as a string
      * @throws IOException
      * @throws URISyntaxException
      */
-    public String executeProxy(String url, String accessToken, String password, String username)
+    public String executeProxy(Map<String, String> params)
         throws IOException, URISyntaxException
     {
-        return proxy.request(url, accessToken, password, username);
+        return proxy.request(params);
     }
 }

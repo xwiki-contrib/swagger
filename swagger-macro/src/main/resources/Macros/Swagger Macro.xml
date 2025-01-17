@@ -247,38 +247,35 @@ require(['jquery', 'swagger-ui', 'yamltojson', 'xwiki-l10n!swaggerNotifications'
     });
   }
 
-  function checkIfJson(content) {
-    // We know that all json start with "{" so we can check if the first character is "{".
-    return content.charAt(0) === "{";
-
-  }
-
   function determinateSource(swaggerParameters, swaggerContainer) {
     let content = swaggerContainer.find('.swaggercontent').text();
     if (content.length &gt; 0) {
-      if (content == "" || content == null) {
-        return ["spec", {}]
+      if (content === "" || content == null) {
+        return ["spec", {}];
       }
       try {
-        if (!checkIfJson(content)) {
-          // OpenAPI specifications can be written in both YAML and JSON, but the spec parameter only expects a JSON.
-          return ['spec', yamltojson.load(content)];
-        }
+        // First, try to parse as JSON
         return ['spec', JSON.parse(content)];
-      } catch (error) {
-        console.error('Error parsing the content:', error);
-        new XWiki.widgets.Notification(l10n['invalid'], 'error');
-        // Failsafe to display something in the UI.
-        return ['spec', {}];
+      } catch (jsonError) {
+        try {
+          // If JSON parsing fails, try to parse as YAML
+          return ['spec', yamltojson.load(content)];
+        } catch (yamlError) {
+          // If both parsing attempts fail, log the errors and notify the user
+          console.error('Error parsing the content as JSON:', jsonError);
+          console.error('Error parsing the content as YAML:', yamlError);
+          new XWiki.widgets.Notification(l10n['invalid'], 'error');
+          // Failsafe to display something in the UI
+          return ['spec', {}];
+        }
       }
     } else if (swaggerParameters.url != null) {
-      return ['url', swaggerParameters.url]
+      return ['url', swaggerParameters.url];
     } else {
       return ['spec', {}];
     }
-
-
   }
+
 
   // The shadow dom will disappear when entering edit mode and this makes sure that is loaded back and we see the
   // SwaggerUI in edit mode.
@@ -838,7 +835,13 @@ path=$services.webjars.url('org.webjars.npm:js-yaml', 'dist/js-yaml.js')</parame
 ## If the proxy is enabled all the request to get the OpenAPI specifications will be made by the backend and stored in the swaggercontent.
 #if ($xcontext.macro.params.proxy == true)
 &lt;pre class="swaggercontent hidden"&gt;
-  $services.swagger.executeProxy($xcontext.macro.params.url, $xcontext.macro.params.token, $xcontext.macro.params.userName, $xcontext.macro.params.password)
+  #set ($params = {
+    "url": $xcontext.macro.params.url,
+    "accessToken": $xcontext.macro.params.token,
+    "username": $xcontext.macro.params.userName,
+    "password": $xcontext.macro.params.password
+  })
+  $services.swagger.executeProxy($params)
 &lt;/pre&gt;
 #elseif ($wikimacro.content &amp;&amp; $wikimacro.content != "")
   ##invisible div
