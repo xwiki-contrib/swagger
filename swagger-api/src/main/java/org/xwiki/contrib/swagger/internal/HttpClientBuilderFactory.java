@@ -19,8 +19,9 @@
  */
 package org.xwiki.contrib.swagger.internal;
 
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.xwiki.component.annotation.Component;
 
 import javax.inject.Singleton;
@@ -41,6 +42,7 @@ public class HttpClientBuilderFactory
      */
     public CloseableHttpClient create()
     {
+
         return HttpClients.createDefault();
     }
 }

@@ -48,9 +48,9 @@
     </dependency>
     <!-- Needed for http classes -->
     <dependency>
-      <groupId>org.xwiki.platform</groupId>
-      <artifactId>xwiki-platform-configuration-default</artifactId>
-      <version>${platform.version}</version>
+      <groupId>org.apache.httpcomponents.client5</groupId>
+      <artifactId>httpclient5</artifactId>
+      <version>5.2</version>
     </dependency>
   </dependencies>
 </project>

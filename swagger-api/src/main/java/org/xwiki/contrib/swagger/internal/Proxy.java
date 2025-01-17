@@ -27,11 +27,12 @@ import java.util.Base64;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.util.EntityUtils;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.core5.http.ParseException;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.hc.core5.net.URIBuilder;
 import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
 
@@ -113,13 +114,13 @@ public class Proxy
     {
         try (CloseableHttpResponse response = client.execute(get)) {
             // Return the response body if status code is 200
-            if (response.getStatusLine().getStatusCode() == 200) {
+            if (response.getCode() == 200) {
                 return EntityUtils.toString(response.getEntity());
             } else {
-                int statusCode = response.getStatusLine().getStatusCode();
+                int statusCode = response.getCode();
                 logger.error("Request failed with status code: [{}]", statusCode);
             }
-        } catch (IOException e) {
+        } catch (IOException | ParseException e) {
             // Log any exception that occurs during the request execution
             logger.error("Exception occurred while executing the request: [{}]", e.getMessage(), e);
         }
@@ -147,7 +148,7 @@ public class Proxy
         try (CloseableHttpClient client = httpClientBuilderFactory.create()) {
             if (accessToken != null && !accessToken.isEmpty()) {
                 // Gitlab uses the token in the qParams
-                URIBuilder uriBuilder =  new URIBuilder(basicURL.toURI());
+                URIBuilder uriBuilder = new URIBuilder(basicURL.toURI());
                 uriBuilder.addParameter("private_token", accessToken);
                 return executeRequest(client, new HttpGet(uriBuilder.build()));
             }

@@ -29,7 +29,6 @@ import javax.inject.Singleton;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.contrib.swagger.internal.Proxy;
 import org.xwiki.script.service.ScriptService;
-import org.xwiki.stability.Unstable;
 
 /**
  * Simple scripting service for accessing the proxy.
@@ -40,7 +39,6 @@ import org.xwiki.stability.Unstable;
 @Component
 @Named("swagger")
 @Singleton
-@Unstable
 public class SwaggerScriptService implements ScriptService
 {
     @Inject
