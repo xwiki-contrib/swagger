@@ -1,0 +1,3 @@
+org.xwiki.contrib.swagger.internal.HttpClientBuilderFactory
+org.xwiki.contrib.swagger.internal.Proxy
+org.xwiki.contrib.swagger.script.SwaggerScriptService
