@@ -24,7 +24,7 @@
   <parent>
     <groupId>org.xwiki.contrib.swagger</groupId>
     <artifactId>swagger-parent</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0-SNAPSHOT</version>
   </parent>
   <artifactId>swagger-macro</artifactId>
   <packaging>xar</packaging>
