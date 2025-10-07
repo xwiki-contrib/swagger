@@ -207,48 +207,69 @@ require(['jquery', 'swagger-ui', 'yamltojson', 'xwiki-l10n!swaggerNotifications'
     };
   }
 
+
+  function shadowRootContainer(swaggerContainer) {
+    if (!swaggerContainer[0].shadowRoot) {
+      // Create a shadow root to isolate Swagger UI css because it interacts in a bad way with the XWiki css.
+      const shadowRoot = swaggerContainer[0].attachShadow({ mode: 'open' });
+      // Add the Swagger UI CSS to the shadow DOM.
+      const styleLink = document.createElement('link');
+      styleLink.rel = "stylesheet";
+      //TODO find a better way to get this.
+      styleLink.href = "$services.webjars.url('org.webjars:swagger-ui', 'swagger-ui.css')";
+      shadowRoot.appendChild(styleLink);
+      const shadowContent = document.createElement('div');
+      shadowRoot.appendChild(shadowContent);
+      return shadowContent;
+    }
+  }
+
+  function divRootContainer(swaggerContainer) {
+    const divRoot = document.createElement('div');
+    // When we use the div as the root we have to put the style on the document head.
+    const styleLink = document.createElement('link');
+    styleLink.rel = "stylesheet";
+    styleLink.href = "$services.webjars.url('org.webjars:swagger-ui', 'swagger-ui.css')";
+    document.head.appendChild(styleLink);
+    swaggerContainer[0].appendChild(divRoot)
+    return divRoot
+  }
+
+
   function initializeShadowDOM() {
     $(".swaggeroot").each(function () {
       let swaggerContainer = $(this);
-
-      if (!swaggerContainer[0].shadowRoot) {
-        // Create a shadow root to isolate Swagger UI css because it interacts in a bad way with the XWiki css.
-        const shadowRoot = swaggerContainer[0].attachShadow({ mode: 'open' });
-        // Add the Swagger UI CSS to the shadow DOM.
-        const styleLink = document.createElement('link');
-        styleLink.rel = "stylesheet";
-        //TODO find a better way to get this.
-        styleLink.href = "$services.webjars.url('org.webjars:swagger-ui', 'swagger-ui.css')";
-        shadowRoot.appendChild(styleLink);
-
-        // Add the SwaggerUI container to the shadow DOM.
-        const shadowContent = document.createElement('div');
-        shadowRoot.appendChild(shadowContent);
-
-        const swaggerParameters = swaggerContainer.data();
-        source = determinateSource(swaggerParameters, swaggerContainer);
-        delete swaggerParameters.url;
-        delete swaggerParameters.token;
-        // tagsSorter and operationsSorter are using enum pickers and 'default' is a keyword in java so I wrote it
-        // with caps and I have to convert it to lowercase to work with SwaggerUi.
-        swaggerParameters.tagsSorter = swaggerParameters.tagsSorter.toLowerCase();
-        swaggerParameters.operationsSorter = swaggerParameters.operationsSorter.toLowerCase();
-
-        source[0] === 'spec' ? swaggerParameters.spec = source[1] : swaggerParameters.url = source[1];
-        swaggerParameters.domNode = shadowContent;
-        if (swaggerParameters.supportedSubmitMethods != null) {
-          swaggerParameters.supportedSubmitMethods.toLowerCase() === 'None' ? [] :
-            swaggerParameters.supportedSubmitMethods = Array.from(swaggerParameters.supportedSubmitMethods.split(','));
-        }
-        SwaggerUIBundle(
-          swaggerParameters
-        );
+      let swaggerUIContainer;
+      if (XWiki.contextaction === 'export') {
+        // In export mode the shadow dom is ignored by paged.js
+        swaggerUIContainer = divRootContainer(swaggerContainer)
+      } else {
+        swaggerUIContainer = shadowRootContainer(swaggerContainer);
       }
+
+      const swaggerParameters = swaggerContainer.data();
+      source = determinateSource(swaggerParameters, swaggerContainer);
+      delete swaggerParameters.url;
+      delete swaggerParameters.token;
+      // tagsSorter and operationsSorter are using enum pickers and 'default' is a keyword in java so I wrote it
+      // with caps and I have to convert it to lowercase to work with SwaggerUi.
+      swaggerParameters.tagsSorter = swaggerParameters.tagsSorter.toLowerCase();
+      swaggerParameters.operationsSorter = swaggerParameters.operationsSorter.toLowerCase();
+
+      source[0] === 'spec' ? swaggerParameters.spec = source[1] : swaggerParameters.url = source[1];
+      swaggerParameters.domNode = swaggerUIContainer;
+      if (swaggerParameters.supportedSubmitMethods != null) {
+        swaggerParameters.supportedSubmitMethods.toLowerCase() === 'None' ? [] :
+          swaggerParameters.supportedSubmitMethods = Array.from(swaggerParameters.supportedSubmitMethods.split(','));
+      }
+      SwaggerUIBundle(
+        swaggerParameters
+      );
     });
   }
 
   function determinateSource(swaggerParameters, swaggerContainer) {
-    let content = swaggerContainer.find('.swaggercontent').text();
+    let content = swaggerContainer.find('.swaggercontent').attr('data-content');
     if (content.length &gt; 0) {
       if (content === "" || content == null) {
         return ["spec", {}];
@@ -845,9 +866,8 @@ path=$services.webjars.url('org.webjars.npm:js-yaml', 'dist/js-yaml.js')</parame
 &lt;/pre&gt;
 #elseif ($wikimacro.content &amp;&amp; $wikimacro.content != "")
   ##invisible div
-  &lt;pre class="swaggercontent hidden"&gt;
-    $wikimacro.content
-  &lt;/pre&gt;
+  &lt;div class="swaggercontent hidden" data-content = "$escapetool.xml($wikimacro.content)"&gt;
+  &lt;/div&gt;
 #end
 
 &lt;/div&gt;
